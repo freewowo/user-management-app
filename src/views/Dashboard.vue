@@ -80,37 +80,7 @@
               <span>近12个月销售趋势</span>
             </div>
           </template>
-          <div class="chart-container">
-            <div class="chart-y-axis">
-              <span v-for="label in yAxisLabels" :key="label">{{ label }}</span>
-            </div>
-            <div class="chart-area">
-              <div class="chart-bars">
-                <div
-                  v-for="(item, index) in monthlySales"
-                  :key="index"
-                  class="chart-bar-wrapper"
-                >
-                  <div
-                    class="chart-bar"
-                    :style="{ height: getBarHeight(item.amount) + '%' }"
-                    :title="`${item.month}: ¥${item.amount.toFixed(2)}`"
-                  ></div>
-                  <div class="chart-bar-label">{{ item.month.slice(-2) }}月</div>
-                </div>
-              </div>
-              <div class="chart-line">
-                <svg class="line-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
-                  <polyline
-                    :points="linePoints"
-                    fill="none"
-                    stroke="#409eff"
-                    stroke-width="0.5"
-                  />
-                </svg>
-              </div>
-            </div>
-          </div>
+          <SalesChart :data="monthlySales" />
         </el-card>
       </el-col>
     </el-row>
@@ -186,6 +156,7 @@ import { computed, onMounted } from 'vue'
 import { User, Document, Clock, WarningFilled, Bell } from '@element-plus/icons-vue'
 import dayjs from 'dayjs'
 import { useUserStore, useOrderStore } from '@/stores'
+import SalesChart from '@/components/SalesChart.vue'
 
 const userStore = useUserStore()
 const orderStore = useOrderStore()
@@ -226,36 +197,6 @@ const monthlySales = computed(() => {
     months.push({ month, amount })
   }
   return months
-})
-
-const maxMonthlySales = computed(() => {
-  return Math.max(...monthlySales.value.map(m => m.amount), 1)
-})
-
-const yAxisLabels = computed(() => {
-  const max = maxMonthlySales.value
-  return [
-    `¥${(max).toFixed(0)}`,
-    `¥${(max * 0.75).toFixed(0)}`,
-    `¥${(max * 0.5).toFixed(0)}`,
-    `¥${(max * 0.25).toFixed(0)}`,
-    '¥0'
-  ]
-})
-
-const getBarHeight = (amount: number) => {
-  return (amount / maxMonthlySales.value) * 100
-}
-
-const linePoints = computed(() => {
-  const points: string[] = []
-  const total = monthlySales.value.length
-  monthlySales.value.forEach((item, index) => {
-    const x = (index / (total - 1)) * 100
-    const y = 100 - (item.amount / maxMonthlySales.value) * 100
-    points.push(`${x},${y}`)
-  })
-  return points.join(' ')
 })
 
 const recentOrders = computed(() => {
@@ -410,80 +351,6 @@ onMounted(async () => {
 }
 
 .chart-card {
-  height: 100%;
-}
-
-.chart-container {
-  display: flex;
-  height: 280px;
-  padding: 10px 0;
-}
-
-.chart-y-axis {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  width: 60px;
-  font-size: 12px;
-  color: #999;
-  text-align: right;
-  padding-right: 10px;
-}
-
-.chart-area {
-  flex: 1;
-  position: relative;
-  border-left: 1px solid #eee;
-  border-bottom: 1px solid #eee;
-}
-
-.chart-bars {
-  display: flex;
-  align-items: flex-end;
-  height: 100%;
-  padding: 0 4px;
-}
-
-.chart-bar-wrapper {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  height: 100%;
-  justify-content: flex-end;
-}
-
-.chart-bar {
-  width: 80%;
-  background: linear-gradient(180deg, #409eff 0%, #79bbff 100%);
-  border-radius: 4px 4px 0 0;
-  min-height: 4px;
-  transition: height 0.3s ease;
-  cursor: pointer;
-}
-
-.chart-bar:hover {
-  background: linear-gradient(180deg, #337ecc 0%, #409eff 100%);
-}
-
-.chart-bar-label {
-  font-size: 11px;
-  color: #999;
-  margin-top: 8px;
-  white-space: nowrap;
-}
-
-.chart-line {
-  position: absolute;
-  top: 0;
-  left: 4px;
-  right: 4px;
-  bottom: 0;
-  pointer-events: none;
-}
-
-.line-svg {
-  width: 100%;
   height: 100%;
 }
 
