@@ -1,0 +1,33 @@
+{
+  "name": "user-management",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "dev:server": "cd server && npm run dev",
+    "dev:all": "concurrently \"npm run dev:server\" \"npm run dev\"",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview",
+    "start": "cd server && npm start"
+  },
+  "dependencies": {
+    "@element-plus/icons-vue": "^2.3.2",
+    "dayjs": "^1.11.21",
+    "element-plus": "^2.14.3",
+    "file-saver": "^2.0.5",
+    "pinia": "^4.0.2",
+    "vue": "^3.5.40",
+    "vue-router": "^4.6.4",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@types/node": "^24.13.3",
+    "@vitejs/plugin-vue": "^6.0.8",
+    "@vue/tsconfig": "^0.9.1",
+    "concurrently": "^9.2.4",
+    "typescript": "~6.0.2",
+    "vite": "^8.2.0",
+    "vue-tsc": "^3.3.8"
+  }
+}
